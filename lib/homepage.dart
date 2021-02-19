@@ -20,6 +20,7 @@ class _HomepageState extends State<Homepage> {
   double turnoverCharge;
   double gstTurnover;
   double totalFees;
+  double profitper;
   double totalProfit = 0;
 
   bool isCalActive = false;
@@ -41,47 +42,47 @@ class _HomepageState extends State<Homepage> {
     brokerage = totalAmount * 0.0005;
     stt = 0.00025 * sell;
     gst = brokerage * 0.18;
-    turnoverCharge = 0.0000325 * totalAmount;
+    turnoverCharge = 0.0000345 * totalAmount;
     gstTurnover = turnoverCharge * 0.18;
     totalFees = brokerage + stt + gst + turnoverCharge + gstTurnover;
     totalProfit = profit - totalFees;
-    totalProfit = double.parse(totalProfit.toStringAsFixed(2));
+    profitper = totalProfit * 100 / buy;
+    setState(() {
+      totalProfit = double.parse(totalProfit.toStringAsFixed(2));
+    });
   }
 
   void errorCheck() {
     setState(() {
-      
-    try {
-      
-        double b = double.parse(_buyController.text);
-        _showBuyValidationError = false;}
-         on Exception catch (e) {
+      try {
+        double.parse(_buyController.text);
+        _showBuyValidationError = false;
+      } on Exception catch (e) {
         print('Error: $e');
 
-        _showBuyValidationError = true;}
+        _showBuyValidationError = true;
+      }
 
-        try{double s = double.parse(_sellController.text);
-        _showSellValidationError = false;}
-        on Exception catch (e) {
+      try {
+        double.parse(_sellController.text);
+        _showSellValidationError = false;
+      } on Exception catch (e) {
         print('Error: $e');
 
-        _showSellValidationError = true;}
-
+        _showSellValidationError = true;
+      }
     });
-    
-    
   }
 
   Widget textField(String label, TextEditingController textEditingController) {
     return Expanded(
-      child: TextField(
+      child: TextFormField(
         keyboardType: TextInputType.number,
         controller: textEditingController,
         decoration: InputDecoration(
-          errorText: (label=='Buy Amount')?
-          (_showBuyValidationError ? 'Fix errors' : null):
-          (_showSellValidationError ? 'Fix errors' : null),
-          
+          errorText: (label == 'Buy Amount')
+              ? (_showBuyValidationError ? 'Fix errors' : null)
+              : (_showSellValidationError ? 'Fix errors' : null),
           labelText: label,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0),
@@ -94,7 +95,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    // final height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -102,6 +103,7 @@ class _HomepageState extends State<Homepage> {
         centerTitle: true,
         backgroundColor: Color(0XFF0043b4),
       ),
+      backgroundColor: Colors.grey[100],
       body: SafeArea(
         child: Container(
           child: Column(
@@ -118,28 +120,58 @@ class _HomepageState extends State<Homepage> {
                   ],
                 ),
               ),
-              RaisedButton(
-                splashColor: Colors.blueAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  primary: Color(0XFF0043b4),
                 ),
-                color: Color(0XFF0043b4),
                 onPressed: () {
                   //Implement null check both input fields
                   print(_buyController.text);
                   errorCheck();
+                  if (!(_showSellValidationError || _showBuyValidationError)) {
+                    calculate();
+                  }
                 },
                 child: Text(
                   'Calculate',
                   style: TextStyle(color: Colors.white, fontSize: width / 25),
                 ),
               ),
+              SizedBox(
+                height: height * 0.05,
+              ),
               Visibility(
                 visible: true,
                 child: Container(
-                  width: 100,
-                  height: 30,
-                  child: Text('P&L: $totalProfit'),
+                  width: width * 0.8,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          'P&L:\n $totalProfit',
+                          style: TextStyle(
+                              fontSize: width / 20,
+                              fontWeight: FontWeight.bold,
+                              color: (totalProfit < 0)
+                                  ? Colors.red
+                                  : Colors.green),
+                        ),
+                        Text(
+                          '${profitper.toStringAsFixed(2)}%',
+                          style: TextStyle(
+                              fontSize: width / 20,
+                              fontWeight: FontWeight.bold,
+                              color: (totalProfit < 0)
+                                  ? Colors.red
+                                  : Colors.green),
+                        ),
+                      ],
+                    ),
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     color: Colors.white,
