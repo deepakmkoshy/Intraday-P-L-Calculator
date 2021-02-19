@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intradaypl/calculation.dart';
 
 class Homepage extends StatefulWidget {
   Homepage({Key key}) : super(key: key);
@@ -10,19 +11,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   final _buyController = TextEditingController();
   final _sellController = TextEditingController();
-  double profit;
-  double buy;
-  double sell;
-  double totalAmount;
-  double brokerage;
-  double stt;
-  double gst;
-  double turnoverCharge;
-  double gstTurnover;
-  double totalFees;
-  double profitper;
-  double totalProfit = 0;
-
+  Calculation calculation = Calculation();
   bool isCalActive = false;
   bool _showBuyValidationError = false;
   bool _showSellValidationError = false;
@@ -35,21 +24,11 @@ class _HomepageState extends State<Homepage> {
   }
 
   void calculate() {
-    buy = double.parse(_buyController.text);
-    sell = double.parse(_sellController.text);
-    profit = sell - buy;
-    totalAmount = sell + buy;
-    brokerage = totalAmount * 0.0005;
-    stt = 0.00025 * sell;
-    gst = brokerage * 0.18;
-    turnoverCharge = 0.0000345 * totalAmount;
-    gstTurnover = turnoverCharge * 0.18;
-    totalFees = brokerage + stt + gst + turnoverCharge + gstTurnover;
-    totalProfit = profit - totalFees;
-    profitper = totalProfit * 100 / buy;
-    setState(() {
-      totalProfit = double.parse(totalProfit.toStringAsFixed(2));
-    });
+    double sell = double.parse(_sellController.text);
+    double buy = double.parse(_buyController.text);
+    calculation = Calculation(buy: buy, sell: sell);
+    calculation.calculate();
+    isCalActive = true;
   }
 
   void errorCheck() {
@@ -141,10 +120,10 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
               SizedBox(
-                height: height * 0.05,
+                height: height * 0.03,
               ),
               Visibility(
-                visible: true,
+                visible: isCalActive,
                 child: Container(
                   width: width * 0.8,
                   child: Padding(
@@ -152,22 +131,20 @@ class _HomepageState extends State<Homepage> {
                     child: Column(
                       children: [
                         Text(
-                          'P&L:\n $totalProfit',
+                          'P&L:\n ${calculation.totalProfit}',
                           style: TextStyle(
                               fontSize: width / 20,
                               fontWeight: FontWeight.bold,
-                              color: (totalProfit < 0)
+                              color: (calculation.totalProfit < 0)
                                   ? Colors.red
                                   : Colors.green),
                         ),
                         Text(
-                          '${profitper.toStringAsFixed(2)}%',
+                          '${calculation.profitper}%',
                           style: TextStyle(
-                              fontSize: width / 20,
-                              fontWeight: FontWeight.bold,
-                              color: (totalProfit < 0)
-                                  ? Colors.red
-                                  : Colors.green),
+                            fontSize: width / 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
