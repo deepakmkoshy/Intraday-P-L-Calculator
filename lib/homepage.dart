@@ -11,6 +11,8 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   final _buyController = TextEditingController();
   final _sellController = TextEditingController();
+  double width;
+  double height;
   Calculation calculation = Calculation();
   bool isCalActive = false;
   bool _showBuyValidationError = false;
@@ -36,6 +38,7 @@ class _HomepageState extends State<Homepage> {
       try {
         double.parse(_buyController.text);
         _showBuyValidationError = false;
+        isCalActive = false;
       } on Exception catch (e) {
         print('Error: $e');
 
@@ -45,6 +48,7 @@ class _HomepageState extends State<Homepage> {
       try {
         double.parse(_sellController.text);
         _showSellValidationError = false;
+        isCalActive = false;
       } on Exception catch (e) {
         print('Error: $e');
 
@@ -53,12 +57,23 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
+  Widget text(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontSize: width / 20,
+          fontWeight: FontWeight.bold,
+          color: (calculation.totalProfit < 0) ? Colors.red : Colors.green),
+    );
+  }
+
   Widget textField(String label, TextEditingController textEditingController) {
     return Expanded(
       child: TextFormField(
         keyboardType: TextInputType.number,
         controller: textEditingController,
         decoration: InputDecoration(
+          prefixText: '₹',
           errorText: (label == 'Buy Amount')
               ? (_showBuyValidationError ? 'Fix errors' : null)
               : (_showSellValidationError ? 'Fix errors' : null),
@@ -73,8 +88,8 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -125,27 +140,16 @@ class _HomepageState extends State<Homepage> {
               Visibility(
                 visible: isCalActive,
                 child: Container(
-                  width: width * 0.8,
+                  width: width * 0.7,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        Text(
-                          'P&L:\n ${calculation.totalProfit}',
-                          style: TextStyle(
-                              fontSize: width / 20,
-                              fontWeight: FontWeight.bold,
-                              color: (calculation.totalProfit < 0)
-                                  ? Colors.red
-                                  : Colors.green),
+                        text('P&L: ₹${calculation.totalProfit}'),
+                        SizedBox(
+                          height: height * 0.01,
                         ),
-                        Text(
-                          '${calculation.profitper}%',
-                          style: TextStyle(
-                            fontSize: width / 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        text('${calculation.profitper}%'),
                       ],
                     ),
                   ),
