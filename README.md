@@ -1,16 +1,9 @@
-# intradaypl
+# Intraday P&L Calculator for Upstox
 
-A new Flutter project.
+Takes in the total buy amount and total sell amount of that particular trade and shows the final Profit/Loss amount after deducting all fees(including brokerage, GST etc.) also shows the P/L percentage.
 
-## Getting Started
+Fees included: Brokerage, STT, GST, Turnover Charge, GST on turnover charge.(Data updated Feb 2021)
 
-This project is a starting point for a Flutter application.
+# Upcoming Features
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Inputs price of share and expected profit %, and returns the exit price after including the deduction of fees.
