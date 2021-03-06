@@ -7,7 +7,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
-//  TabController _tabController;
+  late TabController _tabController;
 
   final _buyController = TextEditingController();
   final _sellController = TextEditingController();
@@ -17,6 +17,12 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
   bool isCalActive = false;
   bool _showBuyValidationError = false;
   bool _showSellValidationError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
 
   @override
   void dispose() {
@@ -92,93 +98,136 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
     height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Intraday P&L Calculator'),
-        centerTitle: true,
-        backgroundColor: Color(0XFF0043b4),
-      ),
-      backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          title: Text('Intraday P&L Calculator'),
+          bottom: TabBar(
+            indicatorColor: Colors.white,
+            controller: _tabController,
+            tabs: <Widget>[
+              Tab(
+                // icon: Icon(Icons.calculate_outlined),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.calculate_outlined),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('Percentage')
+                  ],
+                ),
+                // text: 'Percentage',
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.timeline_outlined),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('Target')
+                  ],
+                ),
+                // text: 'Target',
+              ),
+            ],
+          ),
+          centerTitle: true,
+          backgroundColor: Color(0XFF0043b4),
+        ),
+        backgroundColor: Colors.grey[100],
 
-      //Wrapping with gesture detector to hide keyboard
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          /*This method here will hide the soft keyboard.*/
-          FocusScope.of(context).unfocus();
-        },
-        child: SafeArea(
-          child: Container(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
+        //Wrapping with gesture detector to hide keyboard
+        body: TabBarView(
+          controller: _tabController,
+          children: <Widget>[
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                /*This method here will hide the soft keyboard.*/
+                FocusScope.of(context).unfocus();
+              },
+              child: SafeArea(
+                child: Container(
+                  child: Column(
                     children: [
-                      textField('Buy Amount', _buyController),
-                      SizedBox(
-                        width: width * 0.05,
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: [
+                            textField('Buy Amount', _buyController),
+                            SizedBox(
+                              width: width * 0.05,
+                            ),
+                            textField('Sell Amount', _sellController),
+                          ],
+                        ),
                       ),
-                      textField('Sell Amount', _sellController),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          primary: Color(0XFF0043b4),
+                        ),
+                        onPressed: () {
+                          //Implement null check both input fields
+                          print(_buyController.text);
+                          errorCheck();
+                          if (!(_showSellValidationError ||
+                              _showBuyValidationError)) {
+                            calculate();
+                          }
+                        },
+                        child: Text(
+                          'Calculate',
+                          style: TextStyle(
+                              color: Colors.white, fontSize: width / 25),
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.03,
+                      ),
+                      Visibility(
+                        visible: isCalActive,
+                        child: Container(
+                          width: width * 0.7,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                text('P&L: ₹${calculation.totalProfit}'),
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                                text('${calculation.profitper}%'),
+                              ],
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5.0),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color(0x40000000),
+                                  blurRadius: 4,
+                                  offset: Offset(0, 0))
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    primary: Color(0XFF0043b4),
-                  ),
-                  onPressed: () {
-                    //Implement null check both input fields
-                    print(_buyController.text);
-                    errorCheck();
-                    if (!(_showSellValidationError ||
-                        _showBuyValidationError)) {
-                      calculate();
-                    }
-                  },
-                  child: Text(
-                    'Calculate',
-                    style: TextStyle(color: Colors.white, fontSize: width / 25),
-                  ),
-                ),
-                SizedBox(
-                  height: height * 0.03,
-                ),
-                Visibility(
-                  visible: isCalActive,
-                  child: Container(
-                    width: width * 0.7,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          text('P&L: ₹${calculation.totalProfit}'),
-                          SizedBox(
-                            height: height * 0.01,
-                          ),
-                          text('${calculation.profitper}%'),
-                        ],
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0x40000000),
-                            blurRadius: 4,
-                            offset: Offset(0, 0))
-                      ],
-                    ),
-                  ),
-                )
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+            Container(
+              child: Center(
+                child: Text("New"),
+              ),
+            )
+          ],
+        ));
   }
 }
