@@ -14,19 +14,19 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   late double width;
   late double height;
   bool isCalActive = false;
- 
+
   double sell = 0;
 
-void calculate() {
+  void calculate() {
     double price = double.parse(_priceController.text);
     double perc = double.parse(_percentageController.text);
-    var calcTarget = CalculateTarget();
-    // var calcTarget = CalculateTarget(buy: price, perc: perc);
-    // calculation.calculate();
+    final calcTarget = CalculateTarget(buy: price, perc: perc);
+    sell = calcTarget.sell;
     isCalActive = true;
   }
 
-  Widget textField(String label, TextEditingController textEditingController) {
+  Widget textField(
+      String label, TextEditingController textEditingController, String) {
     return Expanded(
       child: TextFormField(
         keyboardType: TextInputType.number,
@@ -34,8 +34,8 @@ void calculate() {
         decoration: InputDecoration(
           prefixText: '₹',
           errorText: (label == 'Buy Amount')
-          ? (_showPriceValidationError ? 'Fix errors' : null)
-          : (_showPercValidationError ? 'Fix errors' : null),
+              ? (_showPriceValidationError ? 'Fix errors' : null)
+              : (_showPercValidationError ? 'Fix errors' : null),
           labelText: label,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0),
@@ -88,11 +88,39 @@ void calculate() {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    textField('Buy Amount', _priceController),
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: _priceController,
+                        decoration: InputDecoration(
+                          prefixText: '₹',
+                          errorText:
+                              _showPriceValidationError ? 'Fix errors' : null,
+                          labelText: 'Buy Amount',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       width: width * 0.05,
                     ),
-                    textField('Expected Percentage', _percentageController),
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: _percentageController,
+                        decoration: InputDecoration(
+                          suffixText: '%',
+                          errorText:
+                              _showPercValidationError ? 'Fix errors' : null,
+                          labelText: 'Expected Profit % ',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -106,7 +134,8 @@ void calculate() {
                 onPressed: () {
                   //Implement null check both input fields
                   errorCheck();
-                  if (!(_showPriceValidationError || _showPriceValidationError)) {
+                  if (!(_showPriceValidationError ||
+                      _showPriceValidationError)) {
                     calculate();
                   }
                 },
@@ -126,8 +155,11 @@ void calculate() {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                       Text('Sell Amount: '),
-                       Text('b'),
+                        Text('Sell Amount: '),
+                        Text(
+                          sell.toStringAsFixed(2),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ],
                     ),
                   ),

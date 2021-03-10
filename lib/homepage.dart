@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intradaypl/screens/percentage.dart';
+import 'package:intradaypl/screens/target.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -60,11 +61,7 @@ class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
           controller: _tabController,
           children: <Widget>[
             Percentage(),
-            Container(
-              child: Center(
-                child: Text("New"),
-              ),
-            )
+            Target()
           ],
         ));
   }
