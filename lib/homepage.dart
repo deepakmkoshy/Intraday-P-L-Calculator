@@ -9,25 +9,14 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> with TickerProviderStateMixin {
   late TabController _tabController;
 
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
 
- 
-
-  
-
-  
-
-  
-
   @override
   Widget build(BuildContext context) {
- 
-
     return Scaffold(
         appBar: AppBar(
           title: Text('Intraday P&L Calculator'),

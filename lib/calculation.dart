@@ -1,6 +1,3 @@
-
-
-
 class Calculation {
   late double profit;
   double buy;
@@ -12,9 +9,8 @@ class Calculation {
   late double turnoverCharge;
   late double gstTurnover;
   late double totalFees;
-  String? profitper;
+  String profitper = '';
   double totalProfit = 0;
-
 
   Calculation({required this.buy, required this.sell});
   void calculate() {
@@ -27,6 +23,7 @@ class Calculation {
     gstTurnover = turnoverCharge * 0.18;
     totalFees = brokerage + stt + gst + turnoverCharge + gstTurnover;
     totalProfit = profit - totalFees;
+    print(totalProfit);
     profitper = (totalProfit * 100 / buy).toStringAsFixed(2);
     totalProfit = double.parse(totalProfit.toStringAsFixed(2));
   }
