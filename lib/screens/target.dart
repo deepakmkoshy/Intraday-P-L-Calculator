@@ -25,25 +25,6 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
     isCalActive = true;
   }
 
-  Widget textField(
-      String label, TextEditingController textEditingController, String) {
-    return Expanded(
-      child: TextFormField(
-        keyboardType: TextInputType.number,
-        controller: textEditingController,
-        decoration: InputDecoration(
-          prefixText: '₹',
-          errorText: (label == 'Buy Amount')
-              ? (_showPriceValidationError ? 'Fix errors' : null)
-              : (_showPercValidationError ? 'Fix errors' : null),
-          labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-        ),
-      ),
-    );
-  }
 
   void errorCheck() {
     setState(() {
