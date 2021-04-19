@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intradaypl/constants/decoration.dart';
 import 'package:intradaypl/logic/calculate_target.dart';
 
 class Target extends StatefulWidget {
@@ -144,16 +145,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                       ],
                     ),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color(0x40000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 0))
-                    ],
-                  ),
+                  decoration: cardBoxDecoration
                 ),
               )
             ],

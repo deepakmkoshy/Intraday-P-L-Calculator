@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intradaypl/constants/decoration.dart';
 import 'package:intradaypl/logic/calculation.dart';
 
 class Percentage extends StatefulWidget {
@@ -150,16 +151,7 @@ class _PercentageState extends State<Percentage>
                       ],
                     ),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color(0x40000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 0))
-                    ],
-                  ),
+                  decoration: cardBoxDecoration
                 ),
               )
             ],
