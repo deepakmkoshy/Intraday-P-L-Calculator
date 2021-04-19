@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intradaypl/components/button.dart';
 import 'package:intradaypl/constants/decoration.dart';
 import 'package:intradaypl/logic/calculate_target.dart';
 
@@ -13,25 +14,24 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   bool _showPriceValidationError = false;
   bool _showPercValidationError = false;
 
-  bool isCalActive = false;
+  bool _isCalActive = false;
 
-  double sell = 0;
+  double _sell = 0;
 
   void calculate() {
     double price = double.parse(_priceController.text);
     double perc = double.parse(_percentageController.text);
     final calcTarget = CalculateTarget(buy: price, perc: perc);
-    sell = calcTarget.sell;
-    isCalActive = true;
+    _sell = calcTarget.sell;
+    _isCalActive = true;
   }
-
 
   void _errorCheck() {
     setState(() {
       try {
         double.parse(_priceController.text);
         _showPriceValidationError = false;
-        isCalActive = false;
+        _isCalActive = false;
       } on Exception catch (e) {
         print('Error: $e');
 
@@ -41,7 +41,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
       try {
         double.parse(_percentageController.text);
         _showPercValidationError = false;
-        isCalActive = false;
+        _isCalActive = false;
       } on Exception catch (e) {
         print('Error: $e');
 
@@ -71,7 +71,6 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        
                         keyboardType: TextInputType.number,
                         controller: _priceController,
                         decoration: InputDecoration(
@@ -106,47 +105,37 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                   ],
                 ),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  primary: Color(0XFF0043b4),
-                ),
-                onPressed: () {
-                  //Implement null check both input fields
-                  _errorCheck();
-                  if (!(_showPriceValidationError ||
-                      _showPriceValidationError)) {
-                    calculate();
-                  }
-                },
-                child: Text(
-                  'Calculate',  
-                  style: TextStyle(color: Colors.white, fontSize: width>700? height/20 : width/20),
-                ),
-              ),
+              Button(
+                  onPressed: () {
+                    //Implement null check both input fields
+                    _errorCheck();
+                    if (!(_showPriceValidationError ||
+                        _showPriceValidationError)) {
+                      calculate();
+                    }
+                  },
+                  width: width,
+                  height: height),
               SizedBox(
                 height: height * 0.03,
               ),
               Visibility(
-                visible: isCalActive,
+                visible: _isCalActive,
                 child: Container(
-                  width: width * 0.7,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Text('Sell Amount: '),
-                        Text(
-                          sell.toStringAsFixed(2),
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    width: width * 0.7,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          Text('Sell Amount: '),
+                          Text(
+                            _sell.toStringAsFixed(2),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  decoration: cardBoxDecoration
-                ),
+                    decoration: cardBoxDecoration),
               )
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intradaypl/components/button.dart';
 import 'package:intradaypl/constants/decoration.dart';
 import 'package:intradaypl/logic/calculation.dart';
 
@@ -48,7 +49,6 @@ class _PercentageState extends State<Percentage>
   }
 
   Widget _text(String text) {
-    
     return Text(
       text,
       style: TextStyle(
@@ -113,46 +113,37 @@ class _PercentageState extends State<Percentage>
                   ],
                 ),
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  primary: Color(0XFF0043b4),
-                ),
-                onPressed: () {
-                  //Implement null check both input fields
-                  _errorCheck();
-                  if (!(_showSellValidationError || _showBuyValidationError)) {
-                    _calculate();
-                  }
-                },
-                child: Text(
-                  'Calculate',
-                  style: TextStyle(color: Colors.white, fontSize: width>700? height/20 : width/20),
-                ),
-              ),
+              Button(
+                  onPressed: () {
+                    //Implement null check both input fields
+                    _errorCheck();
+                    if (!(_showSellValidationError ||
+                        _showBuyValidationError)) {
+                      _calculate();
+                    }
+                  },
+                  width: width,
+                  height: height),
               SizedBox(
                 height: height * 0.03,
               ),
               Visibility(
                 visible: isCalActive,
                 child: Container(
-                  width: width * 0.7,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        _text('P&L: ₹${calculation.totalProfit}'),
-                        SizedBox(
-                          height: height * 0.01,
-                        ),
-                        _text('${calculation.profitper}%'),
-                      ],
+                    width: width * 0.7,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          _text('P&L: ₹${calculation.totalProfit}'),
+                          SizedBox(
+                            height: height * 0.01,
+                          ),
+                          _text('${calculation.profitper}%'),
+                        ],
+                      ),
                     ),
-                  ),
-                  decoration: cardBoxDecoration
-                ),
+                    decoration: cardBoxDecoration),
               )
             ],
           ),
@@ -160,6 +151,7 @@ class _PercentageState extends State<Percentage>
       ),
     );
   }
+
   @override
   bool get wantKeepAlive => true;
 }

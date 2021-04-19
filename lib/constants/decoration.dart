@@ -7,3 +7,6 @@ const cardBoxDecoration = BoxDecoration(
     BoxShadow(color: Color(0x40000000), blurRadius: 4, offset: Offset(0, 0))
   ],
 );
+
+
+
