@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intradaypl/calculate_target.dart';
+import 'package:intradaypl/logic/calculate_target.dart';
 
 class Target extends StatefulWidget {
   @override
@@ -11,8 +11,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   final _percentageController = TextEditingController();
   bool _showPriceValidationError = false;
   bool _showPercValidationError = false;
-  late double width;
-  late double height;
+
   bool isCalActive = false;
 
   double sell = 0;
@@ -26,7 +25,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   }
 
 
-  void errorCheck() {
+  void _errorCheck() {
     setState(() {
       try {
         double.parse(_priceController.text);
@@ -53,8 +52,8 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -71,6 +70,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        
                         keyboardType: TextInputType.number,
                         controller: _priceController,
                         decoration: InputDecoration(
@@ -114,7 +114,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                 ),
                 onPressed: () {
                   //Implement null check both input fields
-                  errorCheck();
+                  _errorCheck();
                   if (!(_showPriceValidationError ||
                       _showPriceValidationError)) {
                     calculate();
