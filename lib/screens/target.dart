@@ -121,8 +121,8 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                   }
                 },
                 child: Text(
-                  'Calculate',
-                  style: TextStyle(color: Colors.white, fontSize: width / 25),
+                  'Calculate',  
+                  style: TextStyle(color: Colors.white, fontSize: width>700? height/20 : width/20),
                 ),
               ),
               SizedBox(

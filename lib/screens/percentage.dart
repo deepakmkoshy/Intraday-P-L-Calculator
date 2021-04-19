@@ -42,7 +42,6 @@ class _PercentageState extends State<Percentage>
         isCalActive = false;
       } on Exception catch (e) {
         print('Error: $e');
-
         _showSellValidationError = true;
       }
     });
@@ -129,7 +128,7 @@ class _PercentageState extends State<Percentage>
                 },
                 child: Text(
                   'Calculate',
-                  style: TextStyle(color: Colors.white, fontSize: width / 25),
+                  style: TextStyle(color: Colors.white, fontSize: width>700? height/20 : width/20),
                 ),
               ),
               SizedBox(
