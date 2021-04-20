@@ -17,12 +17,15 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   bool _isCalActive = false;
 
   double _sell = 0;
+  double _stoploss = 0;
 
   void calculate() {
     double price = double.parse(_priceController.text);
     double perc = double.parse(_percentageController.text);
-    final calcTarget = CalculateTarget(buy: price, perc: perc, isShort: _isShortEnabled);
+    final calcTarget =
+        CalculateTarget(buy: price, perc: perc, isShort: _isShortEnabled);
     _sell = calcTarget.sell;
+    _stoploss = calcTarget.stoploss;
     _isCalActive = true;
   }
 
@@ -43,7 +46,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
         _showPercValidationError = false;
         _isCalActive = false;
       } on Exception catch (e) {
-        print('Error: $e');
+        print('Error1: $e');
 
         _showPercValidationError = true;
       }
@@ -77,7 +80,8 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                           prefixText: '₹',
                           errorText:
                               _showPriceValidationError ? 'Fix errors' : null,
-                          labelText: 'Buy Amount',
+                          labelText:
+                              _isShortEnabled ? 'Sell Amount' : 'Buy Amount',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
@@ -114,6 +118,9 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                       onChanged: (state) {
                         setState(() {
                           _isShortEnabled = state;
+                          if (_isCalActive) {
+                            calculate();
+                          }
                         });
                       }),
                 ],
@@ -123,7 +130,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                     //Implement null check both input fields
                     _errorCheck();
                     if (!(_showPriceValidationError ||
-                        _showPriceValidationError)) {
+                        _showPercValidationError)) {
                       calculate();
                     }
                   },
@@ -140,10 +147,32 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          Text('Sell Amount: '),
-                          Text(
-                            _sell.toStringAsFixed(2),
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(_isShortEnabled ? 'Buy' : 'Sell'),
+                              Text(
+                                '₹' + _sell.toStringAsFixed(2),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: width / 22),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text('StopLoss'),
+                              Text(
+                                '₹' + _stoploss.toStringAsFixed(2),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: width / 22),
+                              ),
+                            ],
                           ),
                         ],
                       ),
