@@ -13,7 +13,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   final _percentageController = TextEditingController();
   bool _showPriceValidationError = false;
   bool _showPercValidationError = false;
-
+  bool _isShortEnabled = false;
   bool _isCalActive = false;
 
   double _sell = 0;
@@ -21,7 +21,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   void calculate() {
     double price = double.parse(_priceController.text);
     double perc = double.parse(_percentageController.text);
-    final calcTarget = CalculateTarget(buy: price, perc: perc);
+    final calcTarget = CalculateTarget(buy: price, perc: perc, isShort: _isShortEnabled);
     _sell = calcTarget.sell;
     _isCalActive = true;
   }
@@ -104,6 +104,19 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                     ),
                   ],
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Shorting'),
+                  Switch(
+                      value: _isShortEnabled,
+                      onChanged: (state) {
+                        setState(() {
+                          _isShortEnabled = state;
+                        });
+                      }),
+                ],
               ),
               Button(
                   onPressed: () {
