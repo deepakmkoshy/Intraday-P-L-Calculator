@@ -8,5 +8,5 @@ Fees included: Brokerage, STT, GST, Turnover Charge, GST on turnover charge.(Dat
 
 # Upcoming Features
 
-* Add stoploss option to target screen
-* Toggle for shorting in target screen
+* Stoploss is incorrect
+* Textfield prevents deletion after switching screens

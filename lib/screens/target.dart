@@ -19,7 +19,14 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
   double _sell = 0;
   double _stoploss = 0;
 
-  void calculate() {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //       FocusScope.of(context).unfocus();
+
+  // }
+
+  void _calculate() {
     double price = double.parse(_priceController.text);
     double perc = double.parse(_percentageController.text);
     final calcTarget =
@@ -119,7 +126,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                         setState(() {
                           _isShortEnabled = state;
                           if (_isCalActive) {
-                            calculate();
+                            _calculate();
                           }
                         });
                       }),
@@ -131,7 +138,7 @@ class _TargetState extends State<Target> with AutomaticKeepAliveClientMixin {
                     _errorCheck();
                     if (!(_showPriceValidationError ||
                         _showPercValidationError)) {
-                      calculate();
+                      _calculate();
                     }
                   },
                   width: width,

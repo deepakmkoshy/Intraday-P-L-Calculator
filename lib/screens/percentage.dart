@@ -18,6 +18,13 @@ class _PercentageState extends State<Percentage>
   bool _showBuyValidationError = false;
   bool _showSellValidationError = false;
 
+// @override
+//   void initState() {
+//     super.initState();
+//         FocusScope.of(context).unfocus();
+
+//   }
+
   @override
   void dispose() {
     _buyController.dispose();
